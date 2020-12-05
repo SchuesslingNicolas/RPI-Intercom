@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_restful import Api, Resource
 
 import playsound
+import threading
 
 app = Flask(__name__)
 api = Api(app)
@@ -13,8 +14,8 @@ class Play(Resource):
             return {"error": "No URL sent"},400
         if "URL" not in data:
             return {"error": "Need to provide URL"},400
-        #print(data["URL"])
-        playAudio(data["URL"])
+        x = threading.Thread(target=playAudio, args=(data["URL"],))
+        x.start()
         return
 
 def playAudio(path):
